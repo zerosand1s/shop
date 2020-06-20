@@ -14,6 +14,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
+      // Use "create" syntax whenever instantiating a new widget/object
+      // Use ChangeNotifierProvider.value syntax when simply passing existing value
       create: (context) => ProductsProvider(),
       child: MaterialApp(
         title: 'Shop',
