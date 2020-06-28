@@ -5,6 +5,7 @@ import './screens/products_overview_screen.dart';
 import './screens/product_details_screen.dart';
 
 import './providers/products_provider.dart';
+import './providers/cart_provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,10 +14,17 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      // Use "create" syntax whenever instantiating a new widget/object
-      // Use ChangeNotifierProvider.value syntax when simply passing existing value
-      create: (context) => ProductsProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          // Use "create" syntax whenever instantiating a new widget/object
+          // Use ChangeNotifierProvider.value syntax when simply passing existing value
+          create: (context) => ProductsProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CartProvider(),
+        )
+      ],
       child: MaterialApp(
         title: 'Shop',
         theme: ThemeData(
