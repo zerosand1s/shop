@@ -7,6 +7,7 @@ import '../screens/cart_screen.dart';
 
 import '../widgets/products_grid.dart';
 import '../widgets/badge.dart';
+import '../widgets/app_drawer.dart';
 
 enum PopupMenuOptions { All, Favorites }
 
@@ -73,6 +74,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           )
         ],
       ),
+      drawer: AppDrawer(),
       body: ProductsGrid(_showFavorites),
     );
   }

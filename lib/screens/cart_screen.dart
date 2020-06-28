@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/cart_provider.dart';
+import '../providers/orders_provider.dart';
 
 import '../widgets/cart_item.dart';
+import '../widgets/app_drawer.dart';
 
 class CartScreen extends StatelessWidget {
   static final routeName = '/shopping_cart';
@@ -21,6 +23,7 @@ class CartScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
+      drawer: AppDrawer(),
       body: Column(
         children: <Widget>[
           Card(
@@ -36,7 +39,7 @@ class CartScreen extends StatelessWidget {
                   ),
                   Chip(
                     label: Text(
-                      '\$${cart.totalAmount}',
+                      '\$${cart.totalAmount.toStringAsFixed(2)}',
                       style: TextStyle(color: Colors.white),
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
@@ -54,6 +57,30 @@ class CartScreen extends StatelessWidget {
               itemBuilder: (context, i) => CartItem(
                 cart.items.keys.toList()[i],
                 cart.items.values.toList()[i],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: RaisedButton(
+              onPressed: cart.itemCount <= 0
+                  ? null
+                  : () {
+                      Provider.of<OrdersProvider>(context, listen: false)
+                          .addOrder(
+                              cart.items.values.toList(), cart.totalAmount);
+                      cart.clearCart();
+                    },
+              color: Theme.of(context).accentColor,
+              child: Text(
+                'Order Now!',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
               ),
             ),
           )

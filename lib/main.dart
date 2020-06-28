@@ -4,9 +4,11 @@ import 'package:provider/provider.dart';
 import './screens/products_overview_screen.dart';
 import './screens/product_details_screen.dart';
 import './screens/cart_screen.dart';
+import './screens/orders_screen.dart';
 
 import './providers/products_provider.dart';
 import './providers/cart_provider.dart';
+import './providers/orders_provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,14 +19,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          // Use "create" syntax whenever instantiating a new widget/object
-          // Use ChangeNotifierProvider.value syntax when simply passing existing value
-          create: (context) => ProductsProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => CartProvider(),
-        )
+        // Use "create" syntax whenever instantiating a new widget/object
+        // Use ChangeNotifierProvider.value syntax when simply passing existing value
+        ChangeNotifierProvider(create: (context) => ProductsProvider()),
+        ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => OrdersProvider())
       ],
       child: MaterialApp(
         title: 'Shop',
@@ -55,14 +54,12 @@ class MyApp extends StatelessWidget {
           ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: ProductsOverviewScreen(
-          title: 'Shop',
-        ),
+        home: ProductsOverviewScreen(title: 'Shop'),
         routes: {
           ProductDetailsScreen.routeName: (context) => ProductDetailsScreen(),
-          CartScreen.routeName: (context) => CartScreen(
-                title: 'Your Cart',
-              ),
+          CartScreen.routeName: (context) => CartScreen(title: 'Your Cart'),
+          OrdersScreen.routeName: (context) =>
+              OrdersScreen(title: 'Your Orders'),
         },
       ),
     );
