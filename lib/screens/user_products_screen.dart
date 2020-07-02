@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../providers/products_provider.dart';
 
+import '../screens/edit_product_screen.dart';
+
 import '../widgets/app_drawer.dart';
 import '../widgets/user_product_item.dart';
 
@@ -25,7 +27,8 @@ class UserProductsScreen extends StatelessWidget {
               Icons.add,
               color: Colors.white,
             ),
-            onPressed: null,
+            onPressed: () =>
+                Navigator.of(context).pushNamed(EditProductScreen.routeName),
           )
         ],
       ),
@@ -38,6 +41,7 @@ class UserProductsScreen extends StatelessWidget {
             return Column(
               children: <Widget>[
                 UserProductItem(
+                  id: userProducts.items[i].id,
                   title: userProducts.items[i].title,
                   imageUrl: userProducts.items[i].imageUrl,
                 ),
