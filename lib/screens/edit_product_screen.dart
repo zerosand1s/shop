@@ -56,15 +56,31 @@ class _EditProductScreenState extends State<EditProductScreen> {
       Provider.of<ProductsProvider>(context, listen: false)
           .updateProduct(_newOrEditedProduct.id, _newOrEditedProduct);
     } else {
-      await Provider.of<ProductsProvider>(context, listen: false)
-          .addProduct(_newOrEditedProduct);
+      try {
+        await Provider.of<ProductsProvider>(context, listen: false)
+            .addProduct(_newOrEditedProduct);
+      } catch (err) {
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error!'),
+            content: Text('Something went wrong. Please try again later.'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            ],
+          ),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+
+        Navigator.of(context).pop();
+      }
     }
-
-    setState(() {
-      _isLoading = false;
-    });
-
-    Navigator.of(context).pop();
   }
 
   @override
