@@ -1,4 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+
+import '../models/http_exception.dart';
 
 class SingleProductProvider with ChangeNotifier {
   String id;
@@ -17,8 +22,28 @@ class SingleProductProvider with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  void toggleFavorite() {
-    isFavorite = !isFavorite;
+  Future<void> toggleFavorite() async {
+    final url = 'https://flutter-shop-3045c.firebaseio.com/products/$id.json';
+    final currentFavoriteStatus = isFavorite;
+
+    isFavorite = !currentFavoriteStatus;
     notifyListeners();
+
+    try {
+      final response = await http.patch(
+        url,
+        body: jsonEncode({'isFavorite': isFavorite}),
+      );
+
+      if (response.statusCode >= 400) {
+        isFavorite = currentFavoriteStatus;
+        notifyListeners();
+        throw HttpException('Could not favorite product');
+      }
+    } catch (err) {
+      isFavorite = currentFavoriteStatus;
+      notifyListeners();
+      throw HttpException('Could not favorite product');
+    }
   }
 }

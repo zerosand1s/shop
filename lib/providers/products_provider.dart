@@ -90,7 +90,8 @@ class ProductsProvider with ChangeNotifier {
           'title': product.title,
           'description': product.description,
           'price': product.price,
-          'imageUrl': product.imageUrl
+          'imageUrl': product.imageUrl,
+          'isFavorite': product.isFavorite
         }),
       );
 
