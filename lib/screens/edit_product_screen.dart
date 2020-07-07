@@ -52,34 +52,34 @@ class _EditProductScreenState extends State<EditProductScreen> {
       _isLoading = true;
     });
 
-    if (_newOrEditedProduct.id != null) {
-      Provider.of<ProductsProvider>(context, listen: false)
-          .updateProduct(_newOrEditedProduct.id, _newOrEditedProduct);
-    } else {
-      try {
+    try {
+      if (_newOrEditedProduct.id != null) {
+        await Provider.of<ProductsProvider>(context, listen: false)
+            .updateProduct(_newOrEditedProduct.id, _newOrEditedProduct);
+      } else {
         await Provider.of<ProductsProvider>(context, listen: false)
             .addProduct(_newOrEditedProduct);
-      } catch (err) {
-        await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Error!'),
-            content: Text('Something went wrong. Please try again later.'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('OK'),
-                onPressed: () => Navigator.of(context).pop(),
-              )
-            ],
-          ),
-        );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-
-        Navigator.of(context).pop();
       }
+    } catch (err) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error!'),
+          content: Text('Something went wrong. Please try again later.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () => Navigator.of(context).pop(),
+            )
+          ],
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+
+      Navigator.of(context).pop();
     }
   }
 
