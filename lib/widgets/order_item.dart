@@ -59,7 +59,7 @@ class _OrderItemState extends State<OrderItem> {
                                 ),
                               ),
                               Text(
-                                '\$${p.quantity} x ${p.price}',
+                                '${p.quantity} x \$${p.price}',
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.grey,

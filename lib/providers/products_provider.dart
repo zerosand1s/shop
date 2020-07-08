@@ -62,6 +62,10 @@ class ProductsProvider with ChangeNotifier {
       final body = jsonDecode(response.body) as Map<String, dynamic>;
       final List<SingleProductProvider> products = [];
 
+      if (body == null) {
+        return;
+      }
+
       body.forEach((id, productObj) {
         products.add(SingleProductProvider(
           id: id,

@@ -7,7 +7,7 @@ import '../providers/orders_provider.dart';
 import '../widgets/cart_item.dart';
 import '../widgets/app_drawer.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   static final routeName = '/shopping_cart';
   final String title;
 
@@ -16,12 +16,19 @@ class CartScreen extends StatelessWidget {
   });
 
   @override
+  _CartScreenState createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  var _isPlacingOrder = false;
+
+  @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(widget.title),
       ),
       drawer: AppDrawer(),
       body: Column(
@@ -65,24 +72,53 @@ class CartScreen extends StatelessWidget {
           ),
           Container(
             padding: EdgeInsets.symmetric(vertical: 10),
-            child: RaisedButton(
-              onPressed: cart.itemCount <= 0
-                  ? null
-                  : () {
-                      Provider.of<OrdersProvider>(context, listen: false)
-                          .addOrder(
-                              cart.items.values.toList(), cart.totalAmount);
-                      cart.clearCart();
-                    },
-              color: Theme.of(context).accentColor,
-              child: Text(
-                'Order Now!',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+            child: _isPlacingOrder
+                ? CircularProgressIndicator()
+                : RaisedButton(
+                    onPressed: cart.itemCount <= 0
+                        ? null
+                        : () async {
+                            setState(() {
+                              _isPlacingOrder = true;
+                            });
+
+                            try {
+                              await Provider.of<OrdersProvider>(context,
+                                      listen: false)
+                                  .addOrder(cart.items.values.toList(),
+                                      cart.totalAmount);
+                              cart.clearCart();
+                            } catch (err) {
+                              await showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: Text('Error!'),
+                                  content: Text(
+                                      'Something went wrong. Please try again later.'),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text('OK'),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                    )
+                                  ],
+                                ),
+                              );
+                            } finally {
+                              setState(() {
+                                _isPlacingOrder = false;
+                              });
+                            }
+                          },
+                    color: Theme.of(context).accentColor,
+                    child: Text(
+                      'Order Now!',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
           )
         ],
       ),
