@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import './screens/auth_screen.dart';
 import './screens/products_overview_screen.dart';
 import './screens/product_details_screen.dart';
 import './screens/cart_screen.dart';
@@ -8,6 +9,7 @@ import './screens/orders_screen.dart';
 import './screens/user_products_screen.dart';
 import './screens/edit_product_screen.dart';
 
+import './providers/auth_provider.dart';
 import './providers/products_provider.dart';
 import './providers/cart_provider.dart';
 import './providers/orders_provider.dart';
@@ -23,6 +25,7 @@ class MyApp extends StatelessWidget {
       providers: [
         // Use "create" syntax whenever instantiating a new widget/object
         // Use ChangeNotifierProvider.value syntax when simply passing existing value
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => ProductsProvider()),
         ChangeNotifierProvider(create: (context) => CartProvider()),
         ChangeNotifierProvider(create: (context) => OrdersProvider())
@@ -56,7 +59,7 @@ class MyApp extends StatelessWidget {
           ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: ProductsOverviewScreen(title: 'Shop'),
+        home: AuthScreen(),
         routes: {
           ProductDetailsScreen.routeName: (context) => ProductDetailsScreen(),
           CartScreen.routeName: (context) => CartScreen(title: 'Your Cart'),
