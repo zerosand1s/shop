@@ -59,9 +59,11 @@ class ProductsProvider with ChangeNotifier {
     return _items.firstWhere((item) => item.id == id);
   }
 
-  Future<void> fetchProducts() async {
+  Future<void> fetchProducts([bool filterByUser = false]) async {
+    final filterString =
+        filterByUser ? 'orderBy="addedBy"&equalTo="$userId"' : '';
     final url =
-        'https://flutter-shop-3045c.firebaseio.com/products.json?auth=$authToken';
+        'https://flutter-shop-3045c.firebaseio.com/products.json?auth=$authToken&$filterString';
 
     try {
       final response = await http.get(url);
@@ -112,6 +114,7 @@ class ProductsProvider with ChangeNotifier {
           'description': product.description,
           'price': product.price,
           'imageUrl': product.imageUrl,
+          'addedBy': userId
         }),
       );
 
