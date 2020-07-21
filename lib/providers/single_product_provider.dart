@@ -22,8 +22,9 @@ class SingleProductProvider with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  Future<void> toggleFavorite() async {
-    final url = 'https://flutter-shop-3045c.firebaseio.com/products/$id.json';
+  Future<void> toggleFavorite(String authToken) async {
+    final url =
+        'https://flutter-shop-3045c.firebaseio.com/products/$id.json?auth=$authToken';
     final currentFavoriteStatus = isFavorite;
 
     isFavorite = !currentFavoriteStatus;

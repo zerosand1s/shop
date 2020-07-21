@@ -21,13 +21,17 @@ class SingleOrderItem {
 
 class OrdersProvider with ChangeNotifier {
   List<SingleOrderItem> _orders = [];
+  final String authToken;
+
+  OrdersProvider(this.authToken, this._orders);
 
   List<SingleOrderItem> get orders {
     return [..._orders];
   }
 
   Future<void> fetchOrders() async {
-    const url = 'https://flutter-shop-3045c.firebaseio.com/orders.json';
+    final url =
+        'https://flutter-shop-3045c.firebaseio.com/orders.json?auth=$authToken';
 
     try {
       final response = await http.get(url);
@@ -67,9 +71,10 @@ class OrdersProvider with ChangeNotifier {
 
   Future<void> addOrder(List<SingleCartItem> products, double amount) async {
     final timestamp = DateTime.now();
+    final url =
+        'https://flutter-shop-3045c.firebaseio.com/orders.json?auth=$authToken';
 
     try {
-      const url = 'https://flutter-shop-3045c.firebaseio.com/orders.json';
       final response = await http.post(
         url,
         body: jsonEncode({

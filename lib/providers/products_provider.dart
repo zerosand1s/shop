@@ -42,6 +42,9 @@ class ProductsProvider with ChangeNotifier {
     //       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     // ),
   ];
+  final String authToken;
+
+  ProductsProvider(this.authToken, this._items);
 
   List<SingleProductProvider> get items {
     return [..._items];
@@ -56,7 +59,9 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> fetchProducts() async {
-    const url = 'https://flutter-shop-3045c.firebaseio.com/products.json';
+    final url =
+        'https://flutter-shop-3045c.firebaseio.com/products.json?auth=$authToken';
+
     try {
       final response = await http.get(url);
       final body = jsonDecode(response.body) as Map<String, dynamic>;
@@ -73,7 +78,7 @@ class ProductsProvider with ChangeNotifier {
           description: productObj['description'],
           price: productObj['price'],
           imageUrl: productObj['imageUrl'],
-          isFavorite: false,
+          isFavorite: productObj['isFavorite'],
         ));
       });
 
@@ -86,8 +91,10 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> addProduct(SingleProductProvider product) async {
     // https://cdn.pixabay.com/photo/2013/07/12/13/43/diary-147191_960_720.png
+    final url =
+        'https://flutter-shop-3045c.firebaseio.com/products.json?auth=$authToken';
+
     try {
-      const url = 'https://flutter-shop-3045c.firebaseio.com/products.json';
       var response = await http.post(
         url,
         body: jsonEncode({
@@ -116,12 +123,15 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> updateProduct(
-      String id, SingleProductProvider updatedProduct) async {
+    String id,
+    SingleProductProvider updatedProduct,
+  ) async {
     final index = _items.indexWhere((product) => product.id == id);
+    final url =
+        'https://flutter-shop-3045c.firebaseio.com/products/$id.json?auth=$authToken';
 
     if (index >= 0) {
       _items[index] = updatedProduct;
-      final url = 'https://flutter-shop-3045c.firebaseio.com/products/$id.json';
       await http.patch(
         url,
         body: jsonEncode({
@@ -138,7 +148,8 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    final url = 'https://flutter-shop-3045c.firebaseio.com/products/$id.json';
+    final url =
+        'https://flutter-shop-3045c.firebaseio.com/products/$id.json?auth=$authToken';
     final index = _items.indexWhere((product) => product.id == id);
     var productToDelete = _items[index];
 

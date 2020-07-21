@@ -26,9 +26,19 @@ class MyApp extends StatelessWidget {
         // Use "create" syntax whenever instantiating a new widget/object
         // Use ChangeNotifierProvider.value syntax when simply passing existing value
         ChangeNotifierProvider(create: (context) => AuthProvider()),
-        ChangeNotifierProvider(create: (context) => ProductsProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, ProductsProvider>(
+          update: (context, authData, previousProducts) => ProductsProvider(
+            authData.getToken,
+            previousProducts != null ? previousProducts.items : [],
+          ),
+        ),
         ChangeNotifierProvider(create: (context) => CartProvider()),
-        ChangeNotifierProvider(create: (context) => OrdersProvider())
+        ChangeNotifierProxyProvider<AuthProvider, OrdersProvider>(
+          update: (context, authData, previousOrders) => OrdersProvider(
+            authData.getToken,
+            previousOrders != null ? previousOrders : [],
+          ),
+        ),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authData, child) => MaterialApp(
