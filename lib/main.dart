@@ -30,45 +30,51 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => CartProvider()),
         ChangeNotifierProvider(create: (context) => OrdersProvider())
       ],
-      child: MaterialApp(
-        title: 'Shop',
-        theme: ThemeData(
-          primarySwatch: Colors.indigo,
-          accentColor: Colors.deepOrange,
-          fontFamily: 'Lato',
-          textTheme: ThemeData.light().textTheme.copyWith(
-                title: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.5,
-                ),
-                button: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.5,
-                ),
-              ),
-          appBarTheme: AppBarTheme(
+      child: Consumer<AuthProvider>(
+        builder: (context, authData, child) => MaterialApp(
+          title: 'Shop',
+          theme: ThemeData(
+            primarySwatch: Colors.indigo,
+            accentColor: Colors.deepOrange,
+            fontFamily: 'Lato',
             textTheme: ThemeData.light().textTheme.copyWith(
                   title: TextStyle(
-                    fontSize: 22,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    letterSpacing: 1.5,
+                  ),
+                  button: TextStyle(
+                    fontWeight: FontWeight.bold,
                     letterSpacing: 1.5,
                   ),
                 ),
+            appBarTheme: AppBarTheme(
+              textTheme: ThemeData.light().textTheme.copyWith(
+                    title: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+            ),
+            visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+          home: authData.isLoggedIn
+              ? ProductsOverviewScreen(
+                  title: 'Shop',
+                )
+              : AuthScreen(),
+          routes: {
+            ProductDetailsScreen.routeName: (context) => ProductDetailsScreen(),
+            CartScreen.routeName: (context) => CartScreen(title: 'Your Cart'),
+            OrdersScreen.routeName: (context) =>
+                OrdersScreen(title: 'Your Orders'),
+            UserProductsScreen.routeName: (context) =>
+                UserProductsScreen(title: 'Manage Your Products'),
+            EditProductScreen.routeName: (context) => EditProductScreen(),
+          },
         ),
-        home: AuthScreen(),
-        routes: {
-          ProductDetailsScreen.routeName: (context) => ProductDetailsScreen(),
-          CartScreen.routeName: (context) => CartScreen(title: 'Your Cart'),
-          OrdersScreen.routeName: (context) =>
-              OrdersScreen(title: 'Your Orders'),
-          UserProductsScreen.routeName: (context) =>
-              UserProductsScreen(title: 'Manage Your Products'),
-          EditProductScreen.routeName: (context) => EditProductScreen(),
-        },
       ),
     );
   }
