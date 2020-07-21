@@ -43,8 +43,9 @@ class ProductsProvider with ChangeNotifier {
     // ),
   ];
   final String authToken;
+  final String userId;
 
-  ProductsProvider(this.authToken, this._items);
+  ProductsProvider(this.authToken, this.userId, this._items);
 
   List<SingleProductProvider> get items {
     return [..._items];
@@ -71,6 +72,13 @@ class ProductsProvider with ChangeNotifier {
         return;
       }
 
+      final fetchFavoriteProductsUrl =
+          'https://flutter-shop-3045c.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+      final userFavoriteProductsResponse =
+          await http.get(fetchFavoriteProductsUrl);
+      final userFavoriteProductsResponseBody =
+          jsonDecode(userFavoriteProductsResponse.body) as Map<String, dynamic>;
+
       body.forEach((id, productObj) {
         products.add(SingleProductProvider(
           id: id,
@@ -78,7 +86,9 @@ class ProductsProvider with ChangeNotifier {
           description: productObj['description'],
           price: productObj['price'],
           imageUrl: productObj['imageUrl'],
-          isFavorite: productObj['isFavorite'],
+          isFavorite: userFavoriteProductsResponseBody == null
+              ? false
+              : userFavoriteProductsResponseBody[id] ?? false,
         ));
       });
 
@@ -102,7 +112,6 @@ class ProductsProvider with ChangeNotifier {
           'description': product.description,
           'price': product.price,
           'imageUrl': product.imageUrl,
-          'isFavorite': product.isFavorite
         }),
       );
 

@@ -23,6 +23,10 @@ class AuthProvider with ChangeNotifier {
     return getToken != null;
   }
 
+  String get getUserId {
+    return _userId;
+  }
+
   Future<void> signup(String email, String password) async {
     const url =
         'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA9pMtUc32NqoBTv34Tynz6k2LzrRV5ttE';
