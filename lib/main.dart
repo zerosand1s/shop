@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import './screens/auth_screen.dart';
+import './screens/splash_screen.dart';
 import './screens/products_overview_screen.dart';
 import './screens/product_details_screen.dart';
 import './screens/cart_screen.dart';
@@ -73,10 +74,14 @@ class MyApp extends StatelessWidget {
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           home: authData.isLoggedIn
-              ? ProductsOverviewScreen(
-                  title: 'Shop',
-                )
-              : AuthScreen(),
+              ? ProductsOverviewScreen(title: 'Shop')
+              : FutureBuilder(
+                  future: authData.autoLogin(),
+                  builder: (context, shouldAutoLogin) =>
+                      shouldAutoLogin.connectionState == ConnectionState.waiting
+                          ? SplashScreen()
+                          : AuthScreen(),
+                ),
           routes: {
             ProductDetailsScreen.routeName: (context) => ProductDetailsScreen(),
             CartScreen.routeName: (context) => CartScreen(title: 'Your Cart'),
