@@ -15,6 +15,8 @@ import './providers/products_provider.dart';
 import './providers/cart_provider.dart';
 import './providers/orders_provider.dart';
 
+import './helpers/custom_route.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -47,32 +49,37 @@ class MyApp extends StatelessWidget {
         builder: (context, authData, child) => MaterialApp(
           title: 'Shop',
           theme: ThemeData(
-            primarySwatch: Colors.indigo,
-            accentColor: Colors.deepOrange,
-            fontFamily: 'Lato',
-            textTheme: ThemeData.light().textTheme.copyWith(
-                  title: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.5,
-                  ),
-                  button: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.5,
-                  ),
-                ),
-            appBarTheme: AppBarTheme(
+              primarySwatch: Colors.indigo,
+              accentColor: Colors.deepOrange,
+              fontFamily: 'Lato',
               textTheme: ThemeData.light().textTheme.copyWith(
                     title: TextStyle(
-                      fontSize: 22,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      letterSpacing: 1.5,
+                    ),
+                    button: TextStyle(
+                      fontWeight: FontWeight.bold,
                       letterSpacing: 1.5,
                     ),
                   ),
-            ),
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
+              appBarTheme: AppBarTheme(
+                textTheme: ThemeData.light().textTheme.copyWith(
+                      title: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 1.5,
+                      ),
+                    ),
+              ),
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+              pageTransitionsTheme: PageTransitionsTheme(
+                builders: {
+                  TargetPlatform.android: CustomPageTransitionBuilder(),
+                  TargetPlatform.iOS: CustomPageTransitionBuilder()
+                },
+              )),
           home: authData.isLoggedIn
               ? ProductsOverviewScreen(title: 'Shop')
               : FutureBuilder(
